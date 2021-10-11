@@ -1,0 +1,226 @@
+fileFormatVersion: 2
+guid: 469a7fbbaf9991445826ce3268703bb3
+SketchUpImporter:
+  generateBackFace: 0
+  mergeCoplanarFaces: 0
+  selectedNodes: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f0000001000000011000000120000001300000014000000
+  assetHash:
+    serializedVersion: 2
+    Hash: 0e4137a808e2c08cf57f17e0bfe47bfa
+  longitude: -105.242139
+  latitude: 40.018309
+  northCorrection: -0
+  fileUnit: 0
+  sketchUpImportData:
+    defaultCamera:
+      position: {x: -7.1746707, y: 11.26143, z: -3.003083}
+      lookAt: {x: -3.6898503, y: 5.8494725, z: -1.0318829}
+      up: {x: 0.6997353, y: 0.59473264, z: 0.39580756}
+      fov: 35
+      aspectRatio: 0
+      orthoSize: 1
+      isPerspective: 1
+    scenes: []
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: Cistern
+    100002: Floor
+    100004: Fluid
+    100006: //RootNode
+    100008: Rotate
+    100010: Rotate 1
+    100012: Static
+    100014: Static 1
+    100016: Tube
+    100018: Tube 1
+    100020: Valve
+    100022: Valve 1
+    400000: Cistern
+    400002: Floor
+    400004: Fluid
+    400006: //RootNode
+    400008: Rotate
+    400010: Rotate 1
+    400012: Static
+    400014: Static 1
+    400016: Tube
+    400018: Tube 1
+    400020: Valve
+    400022: Valve 1
+    2100000: '[Concrete Block 8x8 Gray]'
+    2100002: '[Water Light Blue]'
+    2100004: '[Terrazzo Tile Accent]'
+    2100006: '[Steel Brushed Stainless]'
+    2100008: '[Color_003]'
+    2100010: '[Color_A01]1'
+    2100012: '[Color_I06]'
+    2300000: Cistern
+    2300002: Floor
+    2300004: Fluid
+    2300006: Rotate
+    2300008: Rotate 1
+    2300010: Static
+    2300012: Static 1
+    2300014: Tube
+    2300016: Tube 1
+    3300000: Cistern
+    3300002: Floor
+    3300004: Fluid
+    3300006: Rotate
+    3300008: Rotate 1
+    3300010: Static
+    3300012: Static 1
+    3300014: Tube
+    3300016: Tube 1
+    4300000: Mesh Cistern
+    4300002: Mesh Fluid
+    4300004: Mesh Floor
+    4300006: Mesh Tube
+    4300008: Mesh Rotate
+    4300010: Mesh Static
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: '[Color_003]'
+    second: {fileID: 2100000, guid: 56c0414895576d74682ef6ecc19c4850, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: '[Color_A01]1'
+    second: {fileID: 2100000, guid: be80c45b277591843afc353ac61b9694, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: '[Color_I06]'
+    second: {fileID: 2100000, guid: aefd313778bccfc45b40bc841cec03a4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: '[Concrete Block 8x8 Gray]'
+    second: {fileID: 2100000, guid: 426853773f0019e40ae9a88123c112aa, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: '[Steel Brushed Stainless]'
+    second: {fileID: 2100000, guid: d788758299618584b81dbceab508ea43, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: '[Terrazzo Tile Accent]'
+    second: {fileID: 2100000, guid: ebff54a26b0a0eb478a5fda1c9deeaa2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: '[Water Light Blue]'
+    second: {fileID: 2100000, guid: 83d0770cb67757943abf659faa6bfa5a, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Concrete_Block_8x8_Gray
+    second: {fileID: 2800000, guid: 415d91edd7d7b634595e34ed259c4b31, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Steel Brushed Stainless
+    second: {fileID: 2800000, guid: ede24aed1735b0f4a944f70ee77e8bf5, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Terrazzo Tile Accent
+    second: {fileID: 2800000, guid: 460e3083bd0f74147a4f76ac634c4dd0, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Water Light Blue_tint0x66FB66A1
+    second: {fileID: 2800000, guid: 623a083980db78a4dadd83cc5ce1c336, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Water Light Blue_tint0xFFFFFFA1
+    second: {fileID: 2800000, guid: e47a274ebb966ef4ab92f5ab6b23161b, type: 3}
+  materials:
+    importMaterials: 1
+    materialName: 2
+    materialSearch: 0
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.0254
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 1
+    hasPreviousCalculatedGlobalScale: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
