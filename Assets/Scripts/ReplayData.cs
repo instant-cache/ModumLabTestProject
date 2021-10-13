@@ -62,6 +62,18 @@ public class ReplayEvent
         Action = action;
         Data = new Vector3(angleData, 0, 0);
     }
+    /*
+    public static List<ReplayEvent> operator!= (ReplayEvent A, ReplayEvent B)
+    {
+        foreach (ReplayEvent _r in A)
+        {
+            foreach (ReplayEvent _r2 in B)
+            {
+
+            }
+        }
+    }
+    */
 }
 
 public enum ReplayActionTypes

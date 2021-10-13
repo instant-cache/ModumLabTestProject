@@ -35,13 +35,14 @@ public class ReplayManager : MonoBehaviour
             if (CurrentReplayData == null)
             {
                 CurrentReplayData = new ReplayData(events);
-            } else if (CurrentReplayData.ReplayEvents != events)
+            } else 
+            if (!System.Linq.Enumerable.SequenceEqual(CurrentReplayData.ReplayEvents, events))
             {
                 Replay.Add(CurrentReplayData);
                 CurrentReplayData = new ReplayData(events);
             }
             CurrentReplayData.FramesElapsed++;
-            Debug.Log($"Added replay data: {positionEvent}, {cameraEvent}, {greenValveEvent}, {blueValveEvent}");
+            Debug.Log($"Added replay data: position  {positionEvent.Data}, camera {cameraEvent.Data}, green {greenValveEvent.Data}, blue {blueValveEvent.Data}");
         }
         else if (IsReplaying)
         {
