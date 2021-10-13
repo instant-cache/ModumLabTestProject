@@ -5940,6 +5940,7 @@ MonoBehaviour:
   blueValveController: {fileID: 951447420}
   fluidController: {fileID: 7642792019034985090}
   iPadUIController: {fileID: 1458719375}
+  scenario: {fileID: 546752240}
   ReplayDataPath: /ReplayData.json
 --- !u!114 &546752240
 MonoBehaviour:
@@ -5965,6 +5966,7 @@ MonoBehaviour:
   _replayManager: {fileID: 546752239}
   timeStart: 0
   timeEnd: 0
+  timeTotal: 0
 --- !u!1 &584143882 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8815556082547939118, guid: 36df760a3580fd841b480d4d9aa2c0ed, type: 3}
