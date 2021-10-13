@@ -13,13 +13,14 @@ public class ValveController : MonoBehaviour
     private Vector3? OldPlaneHitCoord;
     private int ValveActions = 0;
 
-    public PlayerController Player;
+    private PlayerController Player;
 
     // Start is called before the first frame update
     void Start()
     {
         HitboxPlane = new Plane(Vector3.up, transform.position);
         InitializeFromGameManager();
+        Player = Camera.main.GetComponent<GameManager>().playerController;
     }
 
     // Update is called once per frame
@@ -35,11 +36,10 @@ public class ValveController : MonoBehaviour
             Vector3? NewPlaneHitCoord = GetPlaneHitPoint();
             if (NewPlaneHitCoord == null)
             {
-                Debug.LogError("Failed to find plane hit point!");
+                Debug.LogWarning("Failed to find plane hit point!");
                 return;
             }
             float resultAngle = Vector3.SignedAngle((Vector3)OldPlaneHitCoord - transform.position, (Vector3)NewPlaneHitCoord - transform.position, Vector3.up);
-            //Debug.Log($"Signed Angle = {resultAngle}");
             if (CurrentRotation + resultAngle > MaxRotation)
                 CurrentRotation = MaxRotation;
             else if (CurrentRotation + resultAngle < MinRotation)
@@ -61,7 +61,6 @@ public class ValveController : MonoBehaviour
                 OldPlaneHitCoord = hitPoint;
                 ValveActions++;
             }
-            //else Debug.LogError("Failed to find plane hit point!");
         }
     }
 

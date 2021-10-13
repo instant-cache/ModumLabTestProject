@@ -9,7 +9,7 @@ public class TabletUIController : MonoBehaviour
     public UIStates InitialUIState = UIStates.Start;
     private UIStates CurrentUIState;
     public bool IsPortrait = true;
-    public Scenario _scenario;
+    private Scenario _scenario;
 
     public GameObject MainMenu;
     public GameObject InProgressStatusMenuPortrait;
@@ -35,6 +35,7 @@ public class TabletUIController : MonoBehaviour
         ChangeState(InitialUIState);
         InProgressStatusMenu = InProgressStatusMenuPortrait;
         FinishedStatusMenu = FinishedStatusMenuPortrait;
+        _scenario = Camera.main.GetComponent<GameManager>().scenario;
     }
 
     private void Update()

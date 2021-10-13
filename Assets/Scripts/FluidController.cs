@@ -10,8 +10,8 @@ public class FluidController : MonoBehaviour
     Vector3 scale;
     float BlueFluidThroughput = 0;
     float GreenFluidThroughput = 0;
-    public GameObject BlueFluid;
-    public GameObject GreenFluid;
+    public FlowController blueFlowController;
+    public FlowController greenFlowController;
     [SerializeField] float ColourRatio = 0; //blue = 0, green = 1
     float volumeGreen = 0;
 
@@ -45,8 +45,8 @@ public class FluidController : MonoBehaviour
 
     void GetFluidIntake()
     {
-        BlueFluidThroughput = BlueFluid.GetComponent<FlowController>().GetFlowDensity();
-        GreenFluidThroughput = GreenFluid.GetComponent<FlowController>().GetFlowDensity();
+        BlueFluidThroughput = blueFlowController.GetFlowDensity();
+        GreenFluidThroughput = greenFlowController.GetFlowDensity();
     }
 
     void ChangeColour()

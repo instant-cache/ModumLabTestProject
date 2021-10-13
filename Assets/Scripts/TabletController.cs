@@ -9,10 +9,12 @@ public class TabletController : MonoBehaviour
     public bool IsPortrait = true;
     public float HideTranslation = 1;
 
-    public PlayerController Player;
+    public TabletDragController tabletDragController;
+    public TabletUIController tabletUIController;
+    private PlayerController Player;
     void Start()
     {
-
+        Player = Camera.main.GetComponent<GameManager>().playerController;
     }
 
     // Update is called once per frame

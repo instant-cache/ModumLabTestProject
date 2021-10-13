@@ -32,6 +32,14 @@ public class GameManager : MonoBehaviour
     [Tooltip("Normalizes droplet intensity against max valve rotation")]
     [SerializeField] public bool NormalizeFlow = true;
 
+    [Header("Controller references")]
+    public ReplayManager replayManager;
+    public PlayerController playerController;
+    public ValveController greenValveController, blueValveController;
+    public TabletController tabletController;
+    public FluidController fluidController;
+    public Scenario scenario;
+
     void Start()
     {
         

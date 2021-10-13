@@ -26,6 +26,9 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         MainCamera = Camera.main;
+        var gm = MainCamera.GetComponent<GameManager>();
+        MaxCameraAngle = gm.MaxCameraAngle;
+        MinCameraAngle = gm.MinCameraAngle;
         rb = GetComponent<Rigidbody>();
         CurrentCameraAngle = new Vector2(MainCamera.transform.eulerAngles.y, MainCamera.transform.localEulerAngles.x);
         InitializeFromGameManager();

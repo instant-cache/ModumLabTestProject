@@ -8,11 +8,11 @@ public class Scenario : MonoBehaviour
     [SerializeField] [Range(0, 100)] public float MinFluidVolume = 80;
     [SerializeField] [Range(0, 100)] public float TargetGreenToBlueRatio = 70;
     [SerializeField] [Range(0, 100)] public float AllowedErrorMargin = 5;
-    public PlayerController _playerController;
-    public ValveController _greenValveController, _blueValveController;
-    public FluidController _fluidController;
-    public TabletUIController _menuController;
-    public ReplayManager _replayManager;
+    private PlayerController _playerController;
+    private ValveController _greenValveController, _blueValveController;
+    private FluidController _fluidController;
+    private TabletUIController _menuController;
+    private ReplayManager _replayManager;
 
     private float CurrentVolume;
     private float TargetVolume;
@@ -24,7 +24,13 @@ public class Scenario : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        var gm = Camera.main.GetComponent<GameManager>();
+        _playerController = gm.playerController;
+        _greenValveController = gm.greenValveController;
+        _blueValveController = gm.blueValveController;
+        _fluidController = gm.fluidController;
+        _menuController = gm.tabletController.tabletUIController;
+        _replayManager = gm.replayManager;
     }
 
     // Update is called once per frame

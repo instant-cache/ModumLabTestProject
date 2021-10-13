@@ -11,15 +11,23 @@ public class ReplayManager : MonoBehaviour
     private int ReplayFrame;
     private bool IsRecording = false;
     private bool IsReplaying = false;
-    public PlayerController playerController;
-    public ValveController greenValveController, blueValveController;
-    public FluidController fluidController;
-    public TabletUIController iPadUIController;
-    public Scenario scenario;
     public string ReplayDataPath = "/ReplayData.json";
+
+    private PlayerController playerController;
+    private ValveController greenValveController, blueValveController;
+    private FluidController fluidController;
+    private TabletUIController iPadUIController;
+    private Scenario scenario;
     // Start is called before the first frame update
     void Start()
     {
+        var gm = Camera.main.GetComponent<GameManager>();
+        playerController = gm.playerController;
+        greenValveController = gm.greenValveController;
+        blueValveController = gm.blueValveController;
+        fluidController = gm.fluidController;
+        iPadUIController = gm.tabletController.tabletUIController;
+        scenario = gm.scenario;
         Replay = new List<ReplayData>();
     }
 
@@ -143,7 +151,7 @@ public class ReplayManager : MonoBehaviour
             CurrentReplayData = new ReplayData(events);
         }
         CurrentReplayData.FramesElapsed++;
-        Debug.Log($"Added replay data: position  {positionEvent.Data}, camera {cameraEvent.Data}, green {greenValveEvent.Data}, blue {blueValveEvent.Data}");
+        //Debug.Log($"Added replay data: position  {positionEvent.Data}, camera {cameraEvent.Data}, green {greenValveEvent.Data}, blue {blueValveEvent.Data}");
     }
 
     private FinalReplayFrame RecordLastFrameData()

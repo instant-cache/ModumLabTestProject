@@ -5892,14 +5892,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 546752234}
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.03999996, y: 0.6, z: -0.433}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1889019926}
   m_Father: {fileID: 1493676575}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &546752238
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5923,6 +5923,13 @@ MonoBehaviour:
   DropletRate: 2.5
   WaterStrength: 0.015
   NormalizeFlow: 1
+  replayManager: {fileID: 546752239}
+  playerController: {fileID: 1493676570}
+  greenValveController: {fileID: 923374584}
+  blueValveController: {fileID: 951447420}
+  tabletController: {fileID: 1889019927}
+  fluidController: {fileID: 7642792019034985090}
+  scenario: {fileID: 546752240}
 --- !u!114 &546752239
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5935,12 +5942,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4facf99b03b8e448ada504c634e932a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerController: {fileID: 1493676570}
-  greenValveController: {fileID: 923374584}
-  blueValveController: {fileID: 951447420}
-  fluidController: {fileID: 7642792019034985090}
-  iPadUIController: {fileID: 1458719375}
-  scenario: {fileID: 546752240}
   ReplayDataPath: /ReplayData.json
 --- !u!114 &546752240
 MonoBehaviour:
@@ -5955,15 +5956,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxFluidVolumeRepresentation: 1000
-  MinFluidVolume: 80
-  TargetGreenToBlueRatio: 70
+  MinFluidVolume: 20
+  TargetGreenToBlueRatio: 30
   AllowedErrorMargin: 5
-  _playerController: {fileID: 1493676570}
-  _greenValveController: {fileID: 923374584}
-  _blueValveController: {fileID: 951447420}
-  _fluidController: {fileID: 7642792019034985090}
-  _menuController: {fileID: 1458719375}
-  _replayManager: {fileID: 546752239}
   timeStart: 0
   timeEnd: 0
   timeTotal: 0
@@ -11114,7 +11109,7 @@ GameObject:
   - component: {fileID: 923374585}
   - component: {fileID: 923374584}
   m_Layer: 0
-  m_Name: Hitbox
+  m_Name: HitboxGreen
   m_TagString: ValveHitbox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11226,7 +11221,7 @@ GameObject:
   - component: {fileID: 951447421}
   - component: {fileID: 951447420}
   m_Layer: 0
-  m_Name: Hitbox
+  m_Name: HitboxBlue
   m_TagString: ValveHitbox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12600,14 +12595,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1493676569}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -7.96, y: 1, z: 0.433}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 546752237}
   m_Father: {fileID: 0}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!4 &1494374973 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2009127894113087849, guid: 36df760a3580fd841b480d4d9aa2c0ed, type: 3}
@@ -13322,7 +13317,8 @@ MonoBehaviour:
   IsHidden: 0
   IsPortrait: 1
   HideTranslation: 1
-  Player: {fileID: 1493676570}
+  tabletDragController: {fileID: 202584913}
+  tabletUIController: {fileID: 1458719375}
 --- !u!1 &1903988950
 GameObject:
   m_ObjectHideFlags: 0
@@ -13891,8 +13887,8 @@ MonoBehaviour:
   MaxFluidCapacity: 1
   ThroughputMultiplier: 0.0001
   CurrentFluid: 0
-  BlueFluid: {fileID: 529874836}
-  GreenFluid: {fileID: 599709954}
+  blueFlowController: {fileID: 529874838}
+  greenFlowController: {fileID: 599709956}
   ColourRatio: 0
 --- !u!1 &7642792019034985091
 GameObject:
