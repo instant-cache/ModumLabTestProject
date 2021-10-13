@@ -111,8 +111,14 @@ public class ValveController : MonoBehaviour
         return new ReplayEvent("rotation", CurrentRotation);
     }
 
-    public void RotateByRecording(ReplayEvent _rotation)
+    public void RotateByRecording(float _rotation)
     {
-        CurrentRotation = _rotation.Data.x;
+        CurrentRotation = _rotation;
+        this.transform.parent.eulerAngles = new Vector3(0, CurrentRotation);
+    }
+
+    public void SetValveActions(int actions)
+    {
+        ValveActions = actions;
     }
 }

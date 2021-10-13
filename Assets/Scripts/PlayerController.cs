@@ -120,6 +120,11 @@ public class PlayerController : MonoBehaviour
         Debug.Log($"Toggled player controls. Now {ControlsEnabled}");
         ControlsEnabled = !ControlsEnabled;
     }
+    public void ToggleControls(bool state)
+    {
+        Debug.Log($"Toggled player controls. Now {state}");
+        ControlsEnabled = state;
+    }
 
     void TabletControls()
     {
@@ -137,23 +142,18 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public ReplayEvent GetPositionReplayEvent()
+    public Vector3 GetPositionReplayEvent()
     {
-        return new ReplayEvent("movement", transform.position);
+        return transform.position;
     }
 
-    public ReplayEvent GetCameraReplayEvent()
+    public void MoveByRecording(Vector3 _movement)
     {
-        return new ReplayEvent("camera", Camera.main.transform.rotation);
+        this.transform.position = _movement;
     }
 
-    public void MoveByRecording(ReplayEvent _movement)
+    public void RotateCameraByRecording(Vector3 _camera)
     {
-        this.transform.position = _movement.Data;
-    }
-
-    public void RotateCameraByRecording(ReplayEvent _camera)
-    {
-        Camera.main.transform.rotation = Quaternion.Euler(_camera.Data);
+        Camera.main.transform.rotation = Quaternion.Euler(_camera);
     }
 }

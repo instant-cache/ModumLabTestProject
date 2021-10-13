@@ -5,6 +5,7 @@ using UnityEngine;
 public class ReplayManager : MonoBehaviour
 {
     private List<ReplayData> Replay;
+    private FinalReplayFrame FinalFrameReplay;
     private ReplayData CurrentReplayData;
     private int CurrentReplayDataIterator;
     private int ReplayFrame;
@@ -14,6 +15,7 @@ public class ReplayManager : MonoBehaviour
     public ValveController greenValveController, blueValveController;
     public FluidController fluidController;
     public TabletUIController iPadUIController;
+    public Scenario scenario;
     public string ReplayDataPath = "/ReplayData.json";
     // Start is called before the first frame update
     void Start()
@@ -25,31 +27,14 @@ public class ReplayManager : MonoBehaviour
     {
         if (IsRecording)
         {
-            ReplayEvent positionEvent = playerController.GetPositionReplayEvent();
-            ReplayEvent cameraEvent = playerController.GetCameraReplayEvent();
-            ReplayEvent greenValveEvent = greenValveController.GetRotationReplayEvent();
-            greenValveEvent.Action += " green";
-            ReplayEvent blueValveEvent = blueValveController.GetRotationReplayEvent();
-            blueValveEvent.Action += " blue";
-            List<ReplayEvent> events = new List<ReplayEvent>() { positionEvent, cameraEvent, greenValveEvent, blueValveEvent };
-            if (CurrentReplayData == null)
-            {
-                CurrentReplayData = new ReplayData(events);
-            } else 
-            if (!System.Linq.Enumerable.SequenceEqual(CurrentReplayData.ReplayEvents, events))
-            {
-                Replay.Add(CurrentReplayData);
-                CurrentReplayData = new ReplayData(events);
-            }
-            CurrentReplayData.FramesElapsed++;
-            Debug.Log($"Added replay data: position  {positionEvent.Data}, camera {cameraEvent.Data}, green {greenValveEvent.Data}, blue {blueValveEvent.Data}");
+            RecordFrame();
         }
         else if (IsReplaying)
         {
             if (CurrentReplayData == null)
             {
                 CurrentReplayData = Replay[0];
-                CurrentReplayDataIterator = 0;
+                CurrentReplayDataIterator = 1;
                 ReplayFrame = 1;
             }
             if (ReplayFrame <= CurrentReplayData.FramesElapsed)
@@ -59,12 +44,16 @@ public class ReplayManager : MonoBehaviour
             }
             else if (CurrentReplayDataIterator < Replay.Count)
             {
-                CurrentReplayDataIterator++;
                 CurrentReplayData = Replay[CurrentReplayDataIterator];
                 CallReplay(CurrentReplayData.ReplayEvents);
                 ReplayFrame = 2;
+                CurrentReplayDataIterator++;
             }
-            else IsReplaying = false;
+            else
+            {
+                IsReplaying = false;
+                SetLastFrame(FinalFrameReplay);
+            }
         }
     }
 
@@ -75,17 +64,23 @@ public class ReplayManager : MonoBehaviour
 
     public void EndRecording()
     {
-        IsRecording = false;
-        ReplayDataPackage.SaveReplayData(new ReplayDataPackage(Replay), ReplayDataPath);
-        CurrentReplayData = null;
+        if (IsRecording)
+        {
+            IsRecording = false;
+            RecordFrame();
+            ReplayDataPackage.SaveReplayData(new ReplayDataPackage(Replay, RecordLastFrameData()), ReplayDataPath);
+            CurrentReplayData = null;
+        }
     }
 
     public void StartReplaying()
     {
+        CurrentReplayData = null;
         try
         {
             var ReplayPackage = ReplayDataPackage.LoadReplayData(ReplayDataPath);
             Replay = ReplayPackage.ReplayDatas;
+            FinalFrameReplay = ReplayPackage.FinalFrame;
         }
         catch (System.Exception e)
         {
@@ -113,18 +108,66 @@ public class ReplayManager : MonoBehaviour
         foreach (ReplayEvent _r in events) {
             switch (_r.Action) {
                 case "movement":
-                    playerController.MoveByRecording(_r);
+                    playerController.MoveByRecording(_r.Data);
                     break;
                 case "camera":
-                    playerController.RotateCameraByRecording(_r);
+                    playerController.RotateCameraByRecording(_r.Data);
                     break;
                 case "rotation green":
-                    greenValveController.RotateByRecording(_r);
+                    greenValveController.RotateByRecording(_r.Data.x);
                     break;
                 case "rotation blue":
-                    blueValveController.RotateByRecording(_r);
+                    blueValveController.RotateByRecording(_r.Data.x);
                     break;
                 }
         }
+    }
+
+    private void RecordFrame()
+    {
+        ReplayEvent positionEvent = new ReplayEvent("movement", playerController.GetPositionReplayEvent());
+        ReplayEvent cameraEvent = new ReplayEvent("camera", Camera.main.transform.rotation);
+        ReplayEvent greenValveEvent = greenValveController.GetRotationReplayEvent();
+        greenValveEvent.Action += " green";
+        ReplayEvent blueValveEvent = blueValveController.GetRotationReplayEvent();
+        blueValveEvent.Action += " blue";
+        List<ReplayEvent> events = new List<ReplayEvent>() { positionEvent, cameraEvent, greenValveEvent, blueValveEvent };
+        if (CurrentReplayData == null)
+        {
+            CurrentReplayData = new ReplayData(events);
+        }
+        else
+        if (!System.Linq.Enumerable.SequenceEqual(CurrentReplayData.ReplayEvents, events))
+        {
+            Replay.Add(CurrentReplayData);
+            CurrentReplayData = new ReplayData(events);
+        }
+        CurrentReplayData.FramesElapsed++;
+        Debug.Log($"Added replay data: position  {positionEvent.Data}, camera {cameraEvent.Data}, green {greenValveEvent.Data}, blue {blueValveEvent.Data}");
+    }
+
+    private FinalReplayFrame RecordLastFrameData()
+    {
+        FinalReplayFrame replayFrame = new FinalReplayFrame();
+        replayFrame.Position = playerController.GetPositionReplayEvent();
+        replayFrame.Camera = Camera.main.transform.rotation.eulerAngles;
+        replayFrame.OverallFluid = fluidController.GetFluidVolume();
+        replayFrame.FluidRatio = fluidController.GetGreenToBlueFluidRatio();
+        replayFrame.ActionsTaken = scenario.GetValveActions();
+        replayFrame.Time = scenario.GetElapsedTime();
+        return replayFrame;
+    }
+
+    private void SetLastFrame(FinalReplayFrame _f)
+    {
+        playerController.MoveByRecording(_f.Position);
+        playerController.RotateCameraByRecording(_f.Camera);
+        fluidController.ChangeColour(_f.FluidRatio);
+        fluidController.Fill(_f.OverallFluid);
+        greenValveController.RotateByRecording(0);
+        blueValveController.RotateByRecording(0);
+        scenario.SetElapsedTime(_f.Time);
+        greenValveController.SetValveActions(_f.ActionsTaken);
+        Camera.main.GetComponent<Scenario>().EndScenario();
     }
 }

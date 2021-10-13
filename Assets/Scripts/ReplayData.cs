@@ -6,6 +6,7 @@ using UnityEngine;
 public class ReplayDataPackage
 {
     public List<ReplayData> ReplayDatas;
+    public FinalReplayFrame FinalFrame;
 
     public static bool SaveReplayData(ReplayDataPackage _data, string _path)
     {
@@ -22,9 +23,10 @@ public class ReplayDataPackage
         return _data;
     }
 
-    public ReplayDataPackage(List<ReplayData> replayDatas)
+    public ReplayDataPackage(List<ReplayData> replayDatas, FinalReplayFrame finalReplayFrame)
     {
         ReplayDatas = replayDatas;
+        FinalFrame = finalReplayFrame;
     }
 }
 
@@ -62,18 +64,17 @@ public class ReplayEvent
         Action = action;
         Data = new Vector3(angleData, 0, 0);
     }
-    /*
-    public static List<ReplayEvent> operator!= (ReplayEvent A, ReplayEvent B)
-    {
-        foreach (ReplayEvent _r in A)
-        {
-            foreach (ReplayEvent _r2 in B)
-            {
+    
+}
 
-            }
-        }
-    }
-    */
+[Serializable]
+public struct FinalReplayFrame
+{
+    public Vector3 Position;
+    public Vector3 Camera;
+    public float OverallFluid, FluidRatio;
+    public float Time;
+    public int ActionsTaken;
 }
 
 public enum ReplayActionTypes

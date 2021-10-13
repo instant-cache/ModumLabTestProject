@@ -37,6 +37,12 @@ public class FluidController : MonoBehaviour
         this.transform.localScale = new Vector3(this.transform.localScale.x, CurrentFluid, this.transform.localScale.z);
     }
 
+    public void Fill(float Volume)
+    {
+        CurrentFluid = Volume;
+        this.transform.localScale = new Vector3(this.transform.localScale.x, CurrentFluid, this.transform.localScale.z);
+    }
+
     void GetFluidIntake()
     {
         BlueFluidThroughput = BlueFluid.GetComponent<FlowController>().GetFlowDensity();
@@ -67,6 +73,12 @@ public class FluidController : MonoBehaviour
             volumeGreen += GreenIntake;
             ColourRatio = volumeGreen / NewFluid;
         }
+        ChangeColour(ColourRatio);
+    }
+
+    public void ChangeColour(float Ratio)
+    {
+        ColourRatio = Ratio;
         this.GetComponent<Renderer>().material.color = Color.Lerp(Color.blue, Color.green, ColourRatio);
     }
 
@@ -105,5 +117,6 @@ public class FluidController : MonoBehaviour
         CurrentFluid = 0;
         ColourRatio = 0;
         volumeGreen = 0;
+        this.transform.localScale = new Vector3(this.transform.localScale.x, 0, this.transform.localScale.z);
     }
 }

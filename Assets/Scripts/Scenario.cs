@@ -20,6 +20,7 @@ public class Scenario : MonoBehaviour
     private bool IsWorking = true;
     public float timeStart;
     public float timeEnd;
+    public float timeTotal;
     // Start is called before the first frame update
     void Start()
     {
@@ -44,7 +45,7 @@ public class Scenario : MonoBehaviour
 
     public void StartScenario()
     {
-        _playerController.ToggleControls();
+        _playerController.ToggleControls(true);
         _menuController.ChangeState(TabletUIController.UIStates.InProgress);
         Ongoing = true;
         timeStart = Time.time;
@@ -54,7 +55,8 @@ public class Scenario : MonoBehaviour
 
     public void EndScenario()
     {
-        _playerController.ToggleControls();
+        timeTotal = timeEnd - timeStart;
+        _playerController.ToggleControls(false);
         _menuController.ChangeState(TabletUIController.UIStates.Finished);
         Ongoing = false;
         _replayManager.EndRecording();
@@ -101,6 +103,13 @@ public class Scenario : MonoBehaviour
 
     public float GetElapsedTime()
     {
-        return timeEnd - timeStart;
+        return timeTotal;
+    }
+
+    public void SetElapsedTime(float time)
+    {
+        timeTotal = time;
+        timeStart = 0;
+        timeEnd = timeTotal;
     }
 }
