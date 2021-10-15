@@ -5956,8 +5956,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxFluidVolumeRepresentation: 1000
-  MinFluidVolume: 20
-  TargetGreenToBlueRatio: 30
+  MinFluidVolume: 80
+  TargetGreenToBlueRatio: 70
   AllowedErrorMargin: 5
   timeStart: 0
   timeEnd: 0
@@ -11144,7 +11144,6 @@ MonoBehaviour:
   MaxRotation: 720
   CurrentRotation: 0
   IsTurning: 0
-  Player: {fileID: 1493676570}
 --- !u!65 &923374585
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11256,7 +11255,6 @@ MonoBehaviour:
   MaxRotation: 720
   CurrentRotation: 0
   IsTurning: 0
-  Player: {fileID: 1493676570}
 --- !u!65 &951447421
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12349,7 +12347,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InitialUIState: 0
   IsPortrait: 1
-  _scenario: {fileID: 546752240}
   MainMenu: {fileID: 1651774054}
   InProgressStatusMenuPortrait: {fileID: 1759362131}
   InProgressStatusMenuLandscape: {fileID: 1490257175}
