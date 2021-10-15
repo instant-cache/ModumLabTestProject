@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,9 +24,10 @@ public class FluidController : MonoBehaviour
 
     void Update()
     {
-        
+        Fill();
     }
 
+    public event Action<float> OnVolumeChanged;
     void Fill()
     {
         if (CurrentFluid < MaxFluidCapacity && (BlueFluidThroughput > 0 || GreenFluidThroughput > 0))
@@ -35,6 +36,7 @@ public class FluidController : MonoBehaviour
             if (CurrentFluid > MaxFluidCapacity) CurrentFluid = MaxFluidCapacity;
             this.transform.localScale = new Vector3(this.transform.localScale.x, CurrentFluid, this.transform.localScale.z);
             ChangeColour();
+            OnVolumeChanged(CurrentFluid);
         }
     }
     public void Fill(float Volume)
@@ -78,12 +80,10 @@ public class FluidController : MonoBehaviour
     void GetBlueFluidIntake(float density)
     {
         BlueFluidThroughput = density;
-        Fill();
     }
     void GetGreenFluidIntake(float density)
     {
         GreenFluidThroughput = density;
-        Fill();
     }
 
 

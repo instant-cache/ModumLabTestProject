@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,6 +13,7 @@ public class Scenario : MonoBehaviour
     private FluidController _fluidController;
     private TabletUIController _menuController;
     private ReplayManager _replayManager;
+    private string text;
 
     private float CurrentVolume;
     private float TargetVolume;
@@ -21,6 +22,13 @@ public class Scenario : MonoBehaviour
     public float timeStart;
     public float timeEnd;
     public float timeTotal;
+
+    public class OnScenarioEventArgs : EventArgs
+    {
+        public float currentVolume, targetVolume, timeTotal, fluidRatio, targetFluidRatio, fluidRatioErrorMargin, greenFluidVolume, blueFluidVolume, valveActions;
+        public bool success;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,17 +39,17 @@ public class Scenario : MonoBehaviour
         _fluidController = gm.fluidController;
         _menuController = gm.tabletController.tabletUIController;
         _replayManager = gm.replayManager;
+        TargetVolume = GetTargetVolume();
+        _fluidController.OnVolumeChanged += SetScenarioVariables;
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (Ongoing)
         {
-            CurrentVolume = GetCurrentVolume();
-            TargetVolume = GetTargetVolume();
+            timeEnd += Time.fixedDeltaTime;
             IsWorking = GetValveWorkingState();
-            timeEnd += Time.deltaTime;
             if (CurrentVolume >= TargetVolume && !IsWorking)
             {
                 EndScenario();
@@ -49,16 +57,40 @@ public class Scenario : MonoBehaviour
         }
     }
 
-    public void StartScenario()
+    public event Action OnScenarioStart;
+    public void StartScenario(bool IsReplay)
     {
-        _playerController.ToggleControls(true);
+        CurrentVolume = 0;
+        if (!IsReplay)
+        {
+            _playerController.ToggleControls(true);
+            _replayManager.StartRecording();
+        }
         _menuController.ChangeState(TabletUIController.UIStates.InProgress);
         Ongoing = true;
         timeStart = Time.time;
         timeEnd = timeStart;
-        _replayManager.StartRecording();
+        OnScenarioStart();
     }
 
+    public event Action<OnScenarioEventArgs> OnScenarioChanged;
+    void SetScenarioVariables(float volume)
+    {
+        if (Ongoing)
+        {
+            CurrentVolume = volume * MaxFluidVolumeRepresentation;
+            IsWorking = GetValveWorkingState();
+            if (CurrentVolume >= TargetVolume && !IsWorking)
+            {
+                EndScenario();
+            }
+            else OnScenarioChanged(new OnScenarioEventArgs { currentVolume = CurrentVolume, blueFluidVolume = GetBlueFluidVolume(), 
+                greenFluidVolume = GetGreenFluidVolume(), success = CurrentVolume >= TargetVolume });
+        }
+    }
+
+
+    public event Action<OnScenarioEventArgs> OnScenarioEnd;
     public void EndScenario()
     {
         timeTotal = timeEnd - timeStart;
@@ -66,6 +98,11 @@ public class Scenario : MonoBehaviour
         _menuController.ChangeState(TabletUIController.UIStates.Finished);
         Ongoing = false;
         _replayManager.EndRecording();
+        float fluidRatio = GetFluidRatio();
+        bool success = fluidRatio >= TargetGreenToBlueRatio - AllowedErrorMargin && fluidRatio <= TargetGreenToBlueRatio + AllowedErrorMargin;
+        OnScenarioEnd(new OnScenarioEventArgs() { blueFluidVolume = GetBlueFluidVolume(), greenFluidVolume = GetGreenFluidVolume(), 
+            currentVolume = CurrentVolume, fluidRatio = fluidRatio, fluidRatioErrorMargin = AllowedErrorMargin, success = success, 
+            targetFluidRatio = TargetGreenToBlueRatio, targetVolume = TargetVolume, timeTotal = timeTotal, valveActions = GetValveActions()});
     }
 
     public float GetTargetVolume()
@@ -73,12 +110,12 @@ public class Scenario : MonoBehaviour
         return _fluidController.GetMaxFluidCapacity() * MaxFluidVolumeRepresentation * (MinFluidVolume / 100);
     }
 
-    public float GetBlueFluidVolumeRepresented()
+    public float GetBlueFluidVolume()
     {
         return _fluidController.GetBlueFluidVolume() * MaxFluidVolumeRepresentation;
     }
 
-    public float GetGreenFluidVolumeRepresented()
+    public float GetGreenFluidVolume()
     {
         return _fluidController.GetGreenFluidVolume() * MaxFluidVolumeRepresentation;
     }

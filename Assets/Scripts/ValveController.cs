@@ -114,6 +114,7 @@ public class ValveController : MonoBehaviour
     {
         CurrentRotation = _rotation;
         this.transform.parent.eulerAngles = new Vector3(0, CurrentRotation);
+        OnValveRotated?.Invoke(this, CurrentRotation);
     }
 
     public void SetValveActions(int actions)

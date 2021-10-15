@@ -108,6 +108,7 @@ public class ReplayManager : MonoBehaviour
         IsReplaying = true;
         fluidController.InitializeFluid();
         iPadUIController.ChangeState(TabletUIController.UIStates.InProgress);
+        scenario.StartScenario(true);
         return;
     }
 
