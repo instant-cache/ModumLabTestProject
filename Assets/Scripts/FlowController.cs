@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,6 +32,7 @@ public class FlowController : MonoBehaviour
 
     }
 
+    public event Action<float> OnFlowDensityChangedEvent;
     private void SetFlowDensity(ValveController sender, float Rotation)
     {
         FlowDensity = Rotation;
@@ -45,6 +46,7 @@ public class FlowController : MonoBehaviour
         {
             WaterFlowParticleSystem.Play();
         }
+        OnFlowDensityChangedEvent(FlowDensity);
     }
 
     void InitializeFromGameManager()
