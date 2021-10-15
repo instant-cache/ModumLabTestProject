@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,36 +17,32 @@ public class FluidController : MonoBehaviour
 
     void Start()
     {
-
+        InitializeFluid();
+        blueFlowController.OnFlowDensityChangedEvent += GetBlueFluidIntake;
+        greenFlowController.OnFlowDensityChangedEvent += GetGreenFluidIntake;
     }
 
     void Update()
     {
-        GetFluidIntake();
-        if (CurrentFluid < MaxFluidCapacity && (BlueFluidThroughput > 0 || GreenFluidThroughput > 0))
-        {
-            ChangeColour();
-            Fill();
-        }
+        Fill();
     }
 
+    public event Action<float> OnVolumeChanged;
     void Fill()
     {
-        CurrentFluid += GetFluidIntakeCapacity(BlueFluidThroughput) + GetFluidIntakeCapacity(GreenFluidThroughput);
-        if (CurrentFluid > MaxFluidCapacity) CurrentFluid = MaxFluidCapacity;
-        this.transform.localScale = new Vector3(this.transform.localScale.x, CurrentFluid, this.transform.localScale.z);
+        if (CurrentFluid < MaxFluidCapacity && (BlueFluidThroughput > 0 || GreenFluidThroughput > 0))
+        {
+            CurrentFluid += GetFluidIntakeCapacity(BlueFluidThroughput) + GetFluidIntakeCapacity(GreenFluidThroughput);
+            if (CurrentFluid > MaxFluidCapacity) CurrentFluid = MaxFluidCapacity;
+            this.transform.localScale = new Vector3(this.transform.localScale.x, CurrentFluid, this.transform.localScale.z);
+            ChangeColour();
+            OnVolumeChanged(CurrentFluid);
+        }
     }
-
     public void Fill(float Volume)
     {
         CurrentFluid = Volume;
         this.transform.localScale = new Vector3(this.transform.localScale.x, CurrentFluid, this.transform.localScale.z);
-    }
-
-    void GetFluidIntake()
-    {
-        BlueFluidThroughput = blueFlowController.GetFlowDensity();
-        GreenFluidThroughput = greenFlowController.GetFlowDensity();
     }
 
     void ChangeColour()
@@ -75,12 +71,22 @@ public class FluidController : MonoBehaviour
         }
         ChangeColour(ColourRatio);
     }
-
     public void ChangeColour(float Ratio)
     {
         ColourRatio = Ratio;
         this.GetComponent<Renderer>().material.color = Color.Lerp(Color.blue, Color.green, ColourRatio);
     }
+
+    void GetBlueFluidIntake(float density)
+    {
+        BlueFluidThroughput = density;
+    }
+    void GetGreenFluidIntake(float density)
+    {
+        GreenFluidThroughput = density;
+    }
+
+
 
     float GetFluidIntakeCapacity(float _throughput)
     {
@@ -112,7 +118,7 @@ public class FluidController : MonoBehaviour
         return MaxFluidCapacity;
     }
 
-    public void ResetFluid()
+    public void InitializeFluid()
     {
         CurrentFluid = 0;
         ColourRatio = 0;

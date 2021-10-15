@@ -18,7 +18,9 @@ public class TabletUIController : MonoBehaviour
     public GameObject FinishedStatusMenuLandscape;
     private GameObject InProgressStatusMenu;
     private GameObject FinishedStatusMenu;
+    private GameObject CurrentMenu;
 
+    private string StatusText;
     private float TargetVolume;
     private float CurrentVolume;
     private float GreenFluidVolume;
@@ -36,15 +38,14 @@ public class TabletUIController : MonoBehaviour
         InProgressStatusMenu = InProgressStatusMenuPortrait;
         FinishedStatusMenu = FinishedStatusMenuPortrait;
         _scenario = Camera.main.GetComponent<GameManager>().scenario;
+        _scenario.OnScenarioStart += SetupInProgress;
+        _scenario.OnScenarioChanged += SetInProgressData;
+        _scenario.OnScenarioEnd += SetFinished;
     }
 
     private void Update()
     {
-        if (CurrentUIState == UIStates.InProgress)
-        {
-            FetchInProgressData();
-            SetInProgressData();
-        }
+
     }
 
     public void ChangeState(UIStates _state)
@@ -54,17 +55,16 @@ public class TabletUIController : MonoBehaviour
         switch (_state) 
         {
             case UIStates.Start : 
-                MainMenu.SetActive(true);
+                CurrentMenu = MainMenu;
                 break;
             case UIStates.InProgress :
-                InProgressStatusMenu.SetActive(true);
+                CurrentMenu = InProgressStatusMenu;
                 break;
             case UIStates.Finished :
-                FinishedStatusMenu.SetActive(true);
-                FetchFinishedData();
-                SetFinishedData();
+                CurrentMenu = FinishedStatusMenu;
                 break;
         }
+        CurrentMenu.SetActive(true);
         CurrentUIState = _state;
     }
 
@@ -81,55 +81,52 @@ public class TabletUIController : MonoBehaviour
             InProgressStatusMenu = InProgressStatusMenuLandscape;
             FinishedStatusMenu = FinishedStatusMenuLandscape;
         }
+        InProgressStatusMenu.GetComponentInChildren<Text>().text = StatusText;
+        FinishedStatusMenu.GetComponentInChildren<Text>().text = StatusText;
         ChangeState(CurrentUIState);
     }
 
-    private void FetchInProgressData()
+    private void SetupInProgress()
     {
-        TargetVolume = _scenario.GetTargetVolume();
-        CurrentVolume = _scenario.GetCurrentVolume();
-        GreenFluidVolume = _scenario.GetGreenFluidVolumeRepresented();
-        BlueFluidVolume = _scenario.GetBlueFluidVolumeRepresented();
+        ChangeState(UIStates.InProgress);
+        SetInProgressData(new Scenario.OnScenarioEventArgs());
     }
 
-    private void SetInProgressData()
+    private void SetInProgressData(Scenario.OnScenarioEventArgs e)
     {
         string colour;
-        if (CurrentVolume < TargetVolume)
-            colour = "red";
-        else colour = "green";
-        InProgressStatusMenu.GetComponentInChildren<Text>().text =
-            $"Overall volume: <color={colour}>{CurrentVolume:0.##}L</color>\n" +
-            $"Green fluid volume: {GreenFluidVolume:0.##}L\n" +
-            $"Blue fluid volume: {BlueFluidVolume:0.##}L";
+        if (e.success)
+            colour = "green";
+        else colour = "red";
+        StatusText = 
+            $"Overall volume: <color={colour}>{e.currentVolume:0.##}L</color>\n" +
+            $"Green fluid volume: {e.greenFluidVolume:0.##}L\n" +
+            $"Blue fluid volume: {e.blueFluidVolume:0.##}L";
+        CurrentMenu.GetComponentInChildren<Text>().text = StatusText;
     }
 
-    private void FetchFinishedData()
+    private void SetFinished(Scenario.OnScenarioEventArgs e)
     {
-        FetchInProgressData();
-        FluidRatio = _scenario.GetFluidRatio();
-        TargetFluidRatio = _scenario.TargetGreenToBlueRatio;
-        FluidRatioErrorMargin = _scenario.AllowedErrorMargin;
-        ValveActions = _scenario.GetValveActions();
-        ElapsedTime = _scenario.GetElapsedTime();
-    }
-
-    private void SetFinishedData()
-    {
-        string colour = "red";
-        string result = "FAILED!";
-        if (FluidRatio >= TargetFluidRatio - FluidRatioErrorMargin && FluidRatio <= TargetFluidRatio + FluidRatioErrorMargin)
+        ChangeState(UIStates.Finished);
+        string colour;
+        string result;
+        if (e.success)
         {
             colour = "lime";
             result = "COMPLETE!";
+        } else
+        {
+            colour = "red";
+            result = "FAILED!";
         }
-        FinishedStatusMenu.transform.Find("CompletionText").GetComponent<Text>().text = $"<color={colour}>{result}</color>";
-        FinishedStatusMenu.transform.Find("StatusText").GetComponent<Text>().text =
-            $"End volume: {CurrentVolume:0.#}L/{TargetVolume:0.#}L\n" +
-            $"Green fluid: {GreenFluidVolume:0.##}L\n" +
-            $"Blue fluid: {BlueFluidVolume:0.##}L\n" +
-            $"End fluid ratio: {FluidRatio:0.##}%/{TargetFluidRatio:0.##}±{FluidRatioErrorMargin:0.##}%\n" +
-            $"Valve actions: {ValveActions}\n" +
-            $"Time taken: {Mathf.FloorToInt(ElapsedTime/60)}:{(int)ElapsedTime%60}";
+        CurrentMenu.transform.Find("CompletionText").GetComponent<Text>().text = $"<color={colour}>{result}</color>";
+        StatusText =
+            $"End volume: {e.currentVolume:0.#}L/{e.targetVolume:0.#}L\n" +
+            $"Green fluid: {e.greenFluidVolume:0.##}L\n" +
+            $"Blue fluid: {e.blueFluidVolume:0.##}L\n" +
+            $"End fluid ratio: {e.fluidRatio:0.##}%/{e.targetFluidRatio:0.##}±{e.fluidRatioErrorMargin:0.##}%\n" +
+            $"Valve actions: {e.valveActions}\n" +
+            $"Time taken: {Mathf.FloorToInt(e.timeTotal/60)}:{(int)e.timeTotal%60}";
+        CurrentMenu.transform.Find("StatusText").GetComponent<Text>().text = StatusText;
     }
 }
