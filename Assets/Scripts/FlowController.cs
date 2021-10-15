@@ -10,7 +10,8 @@ public class FlowController : MonoBehaviour
     [SerializeField] private bool NormalizeFlow;
     private ValveController valveController;
     private ParticleSystem WaterFlowParticleSystem;
-    private float FlowDensity;
+    private float FlowDensity = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -18,14 +19,24 @@ public class FlowController : MonoBehaviour
         valveController = ConnectedValveObject.GetComponentInChildren<ValveController>();
         WaterFlowParticleSystem = GetComponent<ParticleSystem>();
         WaterFlowParticleSystem.Play();
+        var emission = WaterFlowParticleSystem.emission;
+        emission.rateOverTime = 0;
+        var main = WaterFlowParticleSystem.main;
+        main.startSpeed = 0;
+        valveController.OnValveRotated += SetFlowDensity;
     }
 
     // Update is called once per frame
     void Update()
     {
+
+    }
+
+    private void SetFlowDensity(ValveController sender, float Rotation)
+    {
+        FlowDensity = Rotation;
         if (NormalizeFlow)
-            FlowDensity = valveController.GetRotationNormalized();
-        else FlowDensity = valveController.GetRotationRaw();
+            FlowDensity = 720 * FlowDensity / sender.MaxRotation;
         var emission = WaterFlowParticleSystem.emission;
         emission.rateOverTime = FlowDensity * DropletRate;
         var main = WaterFlowParticleSystem.main;

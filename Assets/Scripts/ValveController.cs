@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,28 +26,27 @@ public class ValveController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (IsTurning) RotateValve();
+
     }
 
+    public event Action<ValveController, float> OnValveRotated;
     void RotateValve()
     {
-        if (Player.ControlsEnabled)
+        Vector3? NewPlaneHitCoord = GetPlaneHitPoint();
+        if (NewPlaneHitCoord == null)
         {
-            Vector3? NewPlaneHitCoord = GetPlaneHitPoint();
-            if (NewPlaneHitCoord == null)
-            {
-                Debug.LogWarning("Failed to find plane hit point!");
-                return;
-            }
-            float resultAngle = Vector3.SignedAngle((Vector3)OldPlaneHitCoord - transform.position, (Vector3)NewPlaneHitCoord - transform.position, Vector3.up);
-            if (CurrentRotation + resultAngle > MaxRotation)
-                CurrentRotation = MaxRotation;
-            else if (CurrentRotation + resultAngle < MinRotation)
-                CurrentRotation = MinRotation;
-            else CurrentRotation += resultAngle;
-            this.transform.parent.eulerAngles = new Vector3(0, CurrentRotation);
-            OldPlaneHitCoord = NewPlaneHitCoord;
+            Debug.LogWarning("Failed to find plane hit point!");
+            return;
         }
+        float resultAngle = Vector3.SignedAngle((Vector3)OldPlaneHitCoord - transform.position, (Vector3)NewPlaneHitCoord - transform.position, Vector3.up);
+        if (CurrentRotation + resultAngle > MaxRotation)
+            CurrentRotation = MaxRotation;
+        else if (CurrentRotation + resultAngle < MinRotation)
+            CurrentRotation = MinRotation;
+        else CurrentRotation += resultAngle;
+        this.transform.parent.eulerAngles = new Vector3(0, CurrentRotation);
+        OldPlaneHitCoord = NewPlaneHitCoord;
+        OnValveRotated?.Invoke(this, CurrentRotation);
     }
 
     private void OnMouseDown()
@@ -57,19 +56,20 @@ public class ValveController : MonoBehaviour
             var hitPoint = GetPlaneHitPoint();
             if (hitPoint != null)
             {
-                IsTurning = true;
                 OldPlaneHitCoord = hitPoint;
                 ValveActions++;
             }
         }
     }
 
+    private void OnMouseDrag()
+    {
+        if (Player.ControlsEnabled) RotateValve();
+    }
+
     private void OnMouseUp()
     {
-        if (IsTurning)
-        {
-            IsTurning = false;
-        }
+
     }
 
     private Vector3? GetPlaneHitPoint()
