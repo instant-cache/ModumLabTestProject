@@ -32,7 +32,9 @@ public class FluidController : MonoBehaviour
     {
         if (CurrentFluid < MaxFluidCapacity && (BlueFluidThroughput > 0 || GreenFluidThroughput > 0))
         {
-            CurrentFluid += GetFluidIntakeCapacity(BlueFluidThroughput) + GetFluidIntakeCapacity(GreenFluidThroughput);
+            float newVolumeGreen = GetFluidIntakeCapacity(GreenFluidThroughput);
+            volumeGreen += newVolumeGreen;
+            CurrentFluid += GetFluidIntakeCapacity(BlueFluidThroughput) + newVolumeGreen;
             if (CurrentFluid > MaxFluidCapacity) CurrentFluid = MaxFluidCapacity;
             this.transform.localScale = new Vector3(this.transform.localScale.x, CurrentFluid, this.transform.localScale.z);
             ChangeColour();
@@ -47,27 +49,10 @@ public class FluidController : MonoBehaviour
 
     void ChangeColour()
     {
-        if (CurrentFluid <= 0)
+        float ColourRatio = 0;
+        if (CurrentFluid > 0)
         {
-            if (BlueFluidThroughput > 0) ColourRatio = 0;
-            else ColourRatio = 1;
-            return;
-        }
-        var BlueIntake = GetFluidIntakeCapacity(BlueFluidThroughput);
-        var GreenIntake = GetFluidIntakeCapacity(GreenFluidThroughput);
-        var NewFluid = CurrentFluid + BlueIntake + GreenIntake;
-        if (BlueIntake <= 0 && ColourRatio == 1)
-        {
-            volumeGreen = NewFluid;
-        }
-        else if (GreenIntake <= 0 && ColourRatio == 0)
-        {
-            volumeGreen = 0;
-        }
-        else
-        {
-            volumeGreen += GreenIntake;
-            ColourRatio = volumeGreen / NewFluid;
+            ColourRatio = volumeGreen / CurrentFluid;
         }
         ChangeColour(ColourRatio);
     }
@@ -90,7 +75,7 @@ public class FluidController : MonoBehaviour
 
     float GetFluidIntakeCapacity(float _throughput)
     {
-        return _throughput * ThroughputMultiplier * Time.deltaTime;
+        return _throughput * ThroughputMultiplier * Time.fixedDeltaTime;
     }
 
     public float GetFluidVolume()
