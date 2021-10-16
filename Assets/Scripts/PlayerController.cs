@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -46,9 +46,8 @@ public class PlayerController : MonoBehaviour
             }
             //else MouseControl();
             MovementVectorFlat = GetMovement();
-            TabletControls();
         }
-
+        TabletControls();
     }
 
     void FixedUpdate()
@@ -129,11 +128,13 @@ public class PlayerController : MonoBehaviour
         ControlsEnabled = state;
     }
 
+    public event Func<bool>  OnTabletRotated;
+    public event Action OnTabletHidden;
     void TabletControls()
     {
         if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.E))
         {
-            bool ok = iPadController.Rotate();
+            bool ok = OnTabletRotated();
             if (!ok)
             {
                 Debug.LogError("Can't turn tablet while it's hidden");
@@ -141,7 +142,7 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            iPadController.ToggleHide();
+            OnTabletHidden();
         }
     }
 

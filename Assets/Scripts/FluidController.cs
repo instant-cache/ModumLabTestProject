@@ -22,7 +22,7 @@ public class FluidController : MonoBehaviour
         greenFlowController.OnFlowDensityChangedEvent += GetGreenFluidIntake;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         Fill();
     }

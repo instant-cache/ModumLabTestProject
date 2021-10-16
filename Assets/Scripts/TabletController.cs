@@ -7,14 +7,19 @@ public class TabletController : MonoBehaviour
     // Start is called before the first frame update
     public bool IsHidden = false;
     public bool IsPortrait = true;
-    public float HideTranslation = 1;
+    //public float HideTranslation = 1;
 
     public TabletDragController tabletDragController;
     public TabletUIController tabletUIController;
     private PlayerController Player;
+
+    private Vector3 BaseTabletPosition;
     void Start()
     {
         Player = Camera.main.GetComponent<GameManager>().playerController;
+        Player.OnTabletHidden += ToggleHide;
+        Player.OnTabletRotated += Rotate;
+        BaseTabletPosition = this.transform.localPosition;
     }
 
     // Update is called once per frame
@@ -36,6 +41,7 @@ public class TabletController : MonoBehaviour
         foreach (Transform child in transform)
         {
             child.gameObject.SetActive(true);
+            this.transform.localPosition = BaseTabletPosition;
         }
     }
 

@@ -21,6 +21,7 @@ public class TabletUIController : MonoBehaviour
     private GameObject CurrentMenu;
 
     private string StatusText;
+    private string CompletionText;
     private float TargetVolume;
     private float CurrentVolume;
     private float GreenFluidVolume;
@@ -81,8 +82,9 @@ public class TabletUIController : MonoBehaviour
             InProgressStatusMenu = InProgressStatusMenuLandscape;
             FinishedStatusMenu = FinishedStatusMenuLandscape;
         }
-        InProgressStatusMenu.GetComponentInChildren<Text>().text = StatusText;
-        FinishedStatusMenu.GetComponentInChildren<Text>().text = StatusText;
+        InProgressStatusMenu.transform.Find("StatusText").GetComponent<Text>().text = StatusText;
+        FinishedStatusMenu.transform.Find("StatusText").GetComponent<Text>().text = StatusText;
+        FinishedStatusMenu.transform.Find("CompletionText").GetComponent<Text>().text = CompletionText;
         ChangeState(CurrentUIState);
     }
 
@@ -119,7 +121,7 @@ public class TabletUIController : MonoBehaviour
             colour = "red";
             result = "FAILED!";
         }
-        CurrentMenu.transform.Find("CompletionText").GetComponent<Text>().text = $"<color={colour}>{result}</color>";
+        CompletionText = CurrentMenu.transform.Find("CompletionText").GetComponent<Text>().text = $"<color={colour}>{result}</color>";
         StatusText =
             $"End volume: {e.currentVolume:0.#}L/{e.targetVolume:0.#}L\n" +
             $"Green fluid: {e.greenFluidVolume:0.##}L\n" +

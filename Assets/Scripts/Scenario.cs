@@ -19,6 +19,7 @@ public class Scenario : MonoBehaviour
     private float TargetVolume;
     private bool Ongoing = false;
     private bool IsWorking = true;
+    private bool IsReplaying = false;
     public float timeStart;
     public float timeEnd;
     public float timeTotal;
@@ -50,7 +51,7 @@ public class Scenario : MonoBehaviour
         {
             timeEnd += Time.fixedDeltaTime;
             IsWorking = GetValveWorkingState();
-            if (CurrentVolume >= TargetVolume && !IsWorking)
+            if (CurrentVolume >= TargetVolume && !IsWorking && !IsReplaying)
             {
                 EndScenario();
             }
@@ -60,8 +61,9 @@ public class Scenario : MonoBehaviour
     public event Action OnScenarioStart;
     public void StartScenario(bool IsReplay)
     {
+        IsReplaying = IsReplay;
         CurrentVolume = 0;
-        if (!IsReplay)
+        if (!IsReplaying)
         {
             _playerController.ToggleControls(true);
             _replayManager.StartRecording();
@@ -93,6 +95,7 @@ public class Scenario : MonoBehaviour
     public event Action<OnScenarioEventArgs> OnScenarioEnd;
     public void EndScenario()
     {
+        IsReplaying = false;
         timeTotal = timeEnd - timeStart;
         _playerController.ToggleControls(false);
         _menuController.ChangeState(TabletUIController.UIStates.Finished);
